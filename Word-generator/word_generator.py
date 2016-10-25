@@ -36,9 +36,11 @@ def random_sentences():
     count = int(input("How many sentences do you wish to generate? "))
     counter = 0
     while count > counter:
-        punct_qty = random.randint(1,5)
+        word_qty = random.randint(3, 15)
+        punct_qty = random.randint(0, word_qty - 3)
+        print "Word quantity = %d" % word_qty
         print "Punctuation quantity = %d" % punct_qty
-        generate_words(random.randint(10, 13))
+        generate_words(word_qty)
         choose_punctuation(punct_qty)
         assemble_sentence()
         counter += 1
@@ -46,8 +48,9 @@ def random_sentences():
 def choose_operation():
     operation = str(input("""\n Please choose (input the digit) how you want to operate the word generator:
     1: Choose how many sentences to generate - the rest is automated and random.
-    2: Choose the number of words and punctuation instances - only one sentence is generated.
-    3: Close Word-generator \n"""))
+    2: Choose the number of words and punctuation - only one sentence is generated.
+    3: Close Word-generator
+    NB: Due to missing support of compound words in English, a sentence may contain more words than specified.\n"""))
     if operation == "1":
         random_sentences()
     elif operation == "2":

@@ -28,7 +28,10 @@ def input_word():
 
 def insert_punctuation():
 	symbol = punctuation_list[random.randint(0, len(punctuation_list) -1)]
-	index = random.randint(1, len(word_list) - 3)
+	if len(word_list) > 3:
+		index = random.randint(1, len(word_list) - 3)
+	else:
+		index = random.randint(1, len(word_list) - 2)
 	print "now trying to place %s in index %d" %(symbol, index)
 	print word_list[index]
 	if word_list[index - 1] == "?" or word_list[index + 1] == "?" or word_list[index] == "?":
