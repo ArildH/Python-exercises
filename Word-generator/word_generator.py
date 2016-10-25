@@ -27,13 +27,12 @@ def choose_punctuation(count):
 
 
 
-def input_count():
+def input_counts():
     generate_words(int(input("How many words do you wish to add to the sentence? ")))
-
-def input_punctuation():
     choose_punctuation(int(input("How many instances of punctuation should the sentence contain? ")))
+    assemble_sentence()
 
-def generate_sentences():
+def random_sentences():
     count = int(input("How many sentences do you wish to generate? "))
     counter = 0
     while count > counter:
@@ -44,6 +43,22 @@ def generate_sentences():
         assemble_sentence()
         counter += 1
 
+def choose_operation():
+    operation = str(input("""\n Please choose (input the digit) how you want to operate the word generator:
+    1: Choose how many sentences to generate - the rest is automated and random.
+    2: Choose the number of words and punctuation instances - only one sentence is generated.
+    3: Close Word-generator \n"""))
+    if operation == "1":
+        random_sentences()
+    elif operation == "2":
+        input_counts()
+    elif operation == "3":
+        print "Word-generator powering down..."
+        return
+    else:
+        print "You must choose one of the three options by inputting the corresponding digit."
+        choose_operation()
 
 
-generate_sentences()
+
+choose_operation()
