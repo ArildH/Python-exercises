@@ -7,6 +7,7 @@ import random
 TODO-LIST
 fjern mellomrom før tilagt tegn - DELVIS OK
 sjekk for doble tegn - tillat to ?, to !, tre . og en kombi ?!
+sjekk hvor mange tegn som ikke kunne settes inn, skriv ut dette på slutten av prog
 """
 word_list = []
 punctuation_dict = {"." : 0, "!" : 0, "?" : 0, "," : 0, ":" : 0, ";" : 0}
@@ -19,7 +20,7 @@ def add_word(word):
 
 
 def insert_punctuation(symbol, index):
-	debug = True
+	debug = False
 	if debug:
 		print "#1 Trying to place %s in index %d" % (symbol, index)
 		print "#2 Word before punctuation will be %s" % word_list[index - 1]
@@ -33,7 +34,7 @@ def insert_punctuation(symbol, index):
 			print "#3 Inserting %s in index %d" % (symbol, index)
 		word_list.insert(index, symbol)
 		return True
-	return False
+
 
 
 def pick_punctuation():

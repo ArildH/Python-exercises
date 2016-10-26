@@ -1,11 +1,12 @@
 from word_assembler import *
 import random
 
+debug = False
 def pick_random_word():
 
     with open("words.txt") as f:
         words = [line.rstrip() for line in f]
-    return words[random.randint(0, len(words))]
+    return words[random.randint(0, len(words) - 1)]
 
 #implement method which asks for number of punctuation, insert randomly into sentence
 
@@ -20,9 +21,13 @@ def choose_punctuation(count):
     counter = 0
     while count > counter:
         success = False
-        while not success:
+        max_attempts = 0
+        while not success and max_attempts < count + 50:
             if(pick_punctuation()):
                 success = True
+            max_attempts += 1
+            if debug:
+                print "####### NUMBER OF ATTEMPTS ARE NOW %d ##########" % max_attempts
         counter += 1
 
 
