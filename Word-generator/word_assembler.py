@@ -9,7 +9,7 @@ fjern mellomrom før tilagt tegn - DELVIS OK
 sjekk for doble tegn - tillat to ?, to !, tre . og en kombi ?!
 """
 word_list = []
-punctuation_dict = {"." : 1, "!" : 1, "?" : 1, "," : 0, ":" : 0, ";" : 0}
+punctuation_dict = {"." : 0, "!" : 0, "?" : 0, "," : 0, ":" : 0, ";" : 0}
 def add_word(word):
 	while word != "done":
 		word_list.append(word)
@@ -19,33 +19,15 @@ def add_word(word):
 
 
 def insert_punctuation(symbol, index):
-	debug = False
+	debug = True
 	if debug:
 		print "#1 Trying to place %s in index %d" % (symbol, index)
 		print "#2 Word before punctuation will be %s" % word_list[index - 1]
 	if check_for_punctuation(word_list[index - 1], False) or check_for_punctuation(word_list[index + 1], False) \
 		or check_for_punctuation(word_list[index], False):
 		if debug:
-			print "#3 Found punctuation before, after or in index %d" % index
-			print "PUNCT SYMBOL WEIGHT HERE %d" % punctuation_dict[symbol]
-		if punctuation_dict[symbol] > 0:
-			if (check_for_punctuation(word_list[index - punctuation_dict[symbol]], False) \
-				and word_list[index - punctuation_dict[symbol]] == symbol) \
-				or (check_for_punctuation(word_list[index + punctuation_dict[symbol]], False) \
-				and word_list[index + punctuation_dict[symbol]] == symbol):
-				if debug:
-					print "#4 Inserting %s in index %d" % (symbol, index)
-				word_list.insert(index, symbol)
-				return True
-			else:
-				if debug:
-					print "#4 Unable to place symbol %s in index %d" % (symbol, index)
-				return False
-		else:
-			if debug:
-				print "#4.1 Unable to place symbol %s in index %d" % (symbol, index)
-			return False
-
+			print "#3 Unable to place symbol %s in index %d" % (symbol, index)
+		return False
 	else:
 		if debug:
 			print "#3 Inserting %s in index %d" % (symbol, index)
