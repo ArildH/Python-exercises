@@ -21,7 +21,7 @@ def choose_punctuation(count):
     while count > counter:
         success = False
         while not success:
-            if(insert_punctuation()):
+            if(pick_punctuation()):
                 success = True
         counter += 1
 
@@ -36,8 +36,8 @@ def random_sentences():
     count = int(input("How many sentences do you wish to generate? "))
     counter = 0
     while count > counter:
-        word_qty = random.randint(3, 15)
-        punct_qty = random.randint(0, word_qty - 3)
+        word_qty = random.randint(5, 15)
+        punct_qty = random.randint(0, word_qty - 5)
         print "Word quantity = %d" % word_qty
         print "Punctuation quantity = %d" % punct_qty
         generate_words(word_qty)

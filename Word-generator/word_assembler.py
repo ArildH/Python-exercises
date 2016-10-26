@@ -9,7 +9,7 @@ fjern mellomrom før tilagt tegn - DELVIS OK
 sjekk for doble tegn - tillat to ?, to !, tre . og en kombi ?!
 """
 word_list = []
-punctuation_list = [".", "!", "?", ",", ":", ";"]
+punctuation_dict = {"." : 1, "!" : 1, "?" : 1, "," : 0, ":" : 0, ";" : 0}
 def add_word(word):
 	while word != "done":
 		word_list.append(word)
@@ -17,66 +17,47 @@ def add_word(word):
 	if word == "done":
 		return True
 
-def input_word():
-	done = False
-	print """Welcome to this word assembler. Input the word you wish to add to the sentence,
-	or write 'done' to end input and receive your assembled word."""
-	while not done:
-		word = input("Which word would you like to add to the sentence? ")
-		if add_word(word) == True:
-			done = True
 
-def insert_punctuation():
-	symbol = punctuation_list[random.randint(0, len(punctuation_list) -1)]
-	if len(word_list) > 3:
-		index = random.randint(1, len(word_list) - 3)
+def insert_punctuation(symbol, index):
+	debug = False
+	if debug:
+		print "#1 Trying to place %s in index %d" % (symbol, index)
+		print "#2 Word before punctuation will be %s" % word_list[index - 1]
+	if check_for_punctuation(word_list[index - 1], False) or check_for_punctuation(word_list[index + 1], False) \
+		or check_for_punctuation(word_list[index], False):
+		if debug:
+			print "#3 Found punctuation before, after or in index %d" % index
+			print "PUNCT SYMBOL WEIGHT HERE %d" % punctuation_dict[symbol]
+		if punctuation_dict[symbol] > 0:
+			if (check_for_punctuation(word_list[index - punctuation_dict[symbol]], False) \
+				and word_list[index - punctuation_dict[symbol]] == symbol) \
+				or (check_for_punctuation(word_list[index + punctuation_dict[symbol]], False) \
+				and word_list[index + punctuation_dict[symbol]] == symbol):
+				if debug:
+					print "#4 Inserting %s in index %d" % (symbol, index)
+				word_list.insert(index, symbol)
+				return True
+			else:
+				if debug:
+					print "#4 Unable to place symbol %s in index %d" % (symbol, index)
+				return False
+		else:
+			if debug:
+				print "#4.1 Unable to place symbol %s in index %d" % (symbol, index)
+			return False
+
 	else:
-		index = random.randint(1, len(word_list) - 2)
-	print "now trying to place %s in index %d" %(symbol, index)
-	print word_list[index]
-	if word_list[index - 1] == "?" or word_list[index + 1] == "?" or word_list[index] == "?":
-		print "FOUND ? before or after current index %d" % index
-		if symbol == "?" and word_list[index - 2] != "?" and word_list[index + 2] != "?":
-			word_list.insert(index, symbol)
-			return True
-		else:
-			print "unable to place current symbol %s in current index %d" % (symbol, index)
-
-			return False
-
-	elif word_list[index - 1] == "!" or word_list[index + 1] == "!" or word_list[index] == "!":
-		print "FOUND ! before or after  current index %d" % index
-		if symbol == "!" and word_list[index - 2] != "!" and word_list[index + 2] != "!":
-			word_list.insert(index, symbol)
-			return True
-		else:
-			print "unable to place current symbol %s in current index %d" % (symbol, index)
-
-			return False
-	elif word_list[index - 1] == "." or word_list[index + 1] == "." or word_list[index] == ".":
-		print "FOUND . before or after current index %d" % index
-		if symbol == "." and word_list[index - 2] != "." and word_list[index - 3] != ".":
-			word_list.insert(index, symbol)
-			return True
-		else:
-			print "unable to place current symbol %s in current index %d" % (symbol, index)
-			return False
-	elif word_list[index - 1] == "," or word_list[index + 1 ] == "," or word_list[index] == ",":
-		print "FOUND , before or after current index %d" % index
-		return False
-	elif word_list[index - 1] == ":" or word_list[index + 1] == ":" or word_list[index] == ":":
-		print "FOUND : before, in or after current index %d" % index
-		return False
-	elif word_list[index - 1] == ";" or word_list[index + 1] == ";" or word_list[index] == ";":
-		print "FOUND ; before, in or after current index %d" % index
-		return False
-	else:
-		print "inserting %d %s " %(index, symbol)
+		if debug:
+			print "#3 Inserting %s in index %d" % (symbol, index)
 		word_list.insert(index, symbol)
 		return True
 	return False
 
-	#word_list.insert(random.randint(1, len(word_list) - 1), punctuation_list[random.randint(1, len(punctuation_list) - 1)])
+
+def pick_punctuation():
+	symbol = punctuation_dict.keys()[random.randint(0, len(punctuation_dict) -1)]
+	index = random.randint(1, len(word_list) - 3)
+	return insert_punctuation(symbol, index)
 
 
 def assemble_sentence():
@@ -84,7 +65,7 @@ def assemble_sentence():
 	for x in range(len(word_list)):
 		if x == 0:
 			capitalise_letter(x)
-		if check_for_punctuation(word_list[x]) and x < last_instance:
+		if check_for_punctuation(word_list[x], True) and x < last_instance:
 			capitalise_letter(x + 1)
 	if x == last_instance:
 		word_list[x] = word_list[x] + "."
@@ -108,13 +89,20 @@ def capitalise_letter(x):
 	word_list[x] = word_list[x][0].upper() + word_list[x][1:]
 
 
-def check_for_punctuation(word):
-	for x in punctuation_list:
-		if x != "," and x != ":" and x != ";" and x in word:
-			return True
+def check_for_punctuation(word, capitalise):
+	if capitalise:
+		for x in punctuation_dict.keys():
+			if x != "," and x != ":" and x != ";" and x in word:
+				return True
+	else:
+		for x in punctuation_dict.keys():
+			if x in word:
+				#print "SJEKK HER X ER %s" % x
+				return True
+
 	return False
 
-
+print len(punctuation_dict)
 
 #input_word()
 #print_sentence()
