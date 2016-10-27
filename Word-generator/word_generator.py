@@ -11,6 +11,9 @@ def pick_random_word():
 #implement method which asks for number of punctuation, insert randomly into sentence
 
 def generate_words(count):
+    if count < 4:
+        count = 4
+        print "Warning: minimum supported sentence length is 4. Defaulting length to 4 words.\n"
     i = 0
     while i < count:
         add_word(pick_random_word())
@@ -21,11 +24,11 @@ def choose_punctuation(count):
     counter = 0
     while count > counter:
         success = False
-        max_attempts = 0
-        while not success and max_attempts < count + 50:
+        attempts = 0
+        while not success and attempts < count + 50:
             if(pick_punctuation()):
                 success = True
-            max_attempts += 1
+            attempts += 1
             if debug:
                 print "####### NUMBER OF ATTEMPTS ARE NOW %d ##########" % max_attempts
         counter += 1
@@ -33,21 +36,23 @@ def choose_punctuation(count):
 
 
 def input_counts():
-    generate_words(int(input("How many words do you wish to add to the sentence? ")))
-    choose_punctuation(int(input("How many instances of punctuation should the sentence contain? ")))
-    assemble_sentence()
+    generate_words(input("How many words do you wish to add to the sentence? "))
+    punct_qty = input("How many instances of punctuation should the sentence contain? ")
+    choose_punctuation(punct_qty)
+    assemble_sentence(punct_qty)
 
 def random_sentences():
     count = int(input("How many sentences do you wish to generate? "))
     counter = 0
     while count > counter:
-        word_qty = random.randint(5, 15)
-        punct_qty = random.randint(0, word_qty - 5)
+        word_qty = random.randint(4, 15)
+        punct_qty = random.randint(0, word_qty - 4)
+        print "------------------------------------------"
         print "Word quantity = %d" % word_qty
         print "Punctuation quantity = %d" % punct_qty
         generate_words(word_qty)
         choose_punctuation(punct_qty)
-        assemble_sentence()
+        assemble_sentence(punct_qty)
         counter += 1
 
 def choose_operation():

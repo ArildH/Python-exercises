@@ -43,7 +43,7 @@ def pick_punctuation():
 	return insert_punctuation(symbol, index)
 
 
-def assemble_sentence():
+def assemble_sentence(punct_qty):
 	last_instance = len(word_list) - 1
 	for x in range(len(word_list)):
 		if x == 0:
@@ -52,9 +52,14 @@ def assemble_sentence():
 			capitalise_letter(x + 1)
 	if x == last_instance:
 		word_list[x] = word_list[x] + "."
-	print_sentence()
+	print_sentence(punct_qty)
 
-def print_sentence():
+def print_sentence(punct_qty):
+	actual_punct_qty = 0
+	for x in word_list:
+		for y in punctuation_dict.keys():
+			if x == y:
+				actual_punct_qty += 1
 	sentence = word_list[0]
 	sentence = " ".join(word_list)
 	sentence = sentence.replace(" ?", "?")
@@ -63,8 +68,11 @@ def print_sentence():
 	sentence = sentence.replace(" ,", ",")
 	sentence = sentence.replace(" :", ":")
 	sentence = sentence.replace(" ;", ";")
-	print "------------------------------------------"
+	number = punct_qty - actual_punct_qty
+	print "--------"
 	print sentence
+	print "--------"
+	print "%d punctuation(s) were unable to be inserted." % number
 	print "------------------------------------------"
 	del word_list[:]
 
